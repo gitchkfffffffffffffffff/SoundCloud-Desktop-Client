@@ -1,0 +1,75 @@
+appId: com.soundcloud.desktop
+productName: SoundCloud
+directories:
+  buildResources: assets
+  output: dist
+
+files:
+  - from: public
+    to: .
+  - from: build
+    to: .
+  - from: node_modules
+    to: node_modules
+  - package.json
+
+win:
+  target:
+    - nsis
+    - portable
+  icon: assets/icon.ico
+  certificateFile: null
+  certificatePassword: null
+  signingHashAlgorithms:
+    - sha256
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: SoundCloud
+
+mac:
+  target:
+    - dmg
+    - zip
+  icon: assets/icon.icns
+  category: public.app-category.music
+
+dmg:
+  contents:
+    - x: 110
+      y: 150
+      type: file
+    - x: 240
+      y: 150
+      type: link
+      path: /Applications
+
+linux:
+  target:
+    - AppImage
+    - deb
+  icon: assets/icon.png
+  category: Audio
+
+deb:
+  depends:
+    - libappindicator1
+    - libdbus-1-3
+
+appImage:
+  license: LICENSE
+
+build:
+  asar: true
+  asarUnpack:
+    - node_modules/native-ext/**/*
+
+afterSign: ./notarize.js
+
+publish:
+  provider: github
+  owner: YOUR_GITHUB_USERNAME
+  repo: soundcloud-client
